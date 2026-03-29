@@ -386,6 +386,8 @@ Typical clear-sky irradiance peaks around 800–1000 W/m² at the panel surface,
 
 ---
 
+## 🕐 Timezone Handling
+
 All time and date handling uses the **Pi's system timezone automatically** — there are no hardcoded UTC offsets anywhere in the code. As long as your Pi's timezone is configured correctly, all displays will show the right local time regardless of where in the world you are.
 
 - **Power curve start time:** Midnight of the current local date is computed with `new Date(year, month, day, 0, 0, 0)`, which produces local midnight in the Pi's system timezone. This is passed directly to the HA history API as the start time — no manual offset arithmetic needed.
@@ -398,7 +400,7 @@ To verify or set your Pi's timezone:
 ```bash
 timedatectl                              # check current timezone
 sudo timedatectl set-timezone Asia/Kolkata   # example — replace with your zone
----
+```
 
 ## 🎨 Customisation Tips
 

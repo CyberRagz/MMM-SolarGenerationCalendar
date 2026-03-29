@@ -613,7 +613,7 @@ node_modules/         # npm packages installed by `npm install` (only "ws")
 ## 🤝 Related Projects
 
 - [solis-sensor](https://github.com/hultenvp/solis-sensor) — the HACS integration that provides all inverter entities consumed by this module
-- [MMM-TideTimes](https://github.com/CyberRagz/MMM-TideTimes) — geolocation-based tide times and chart module for MagicMirror², also by CyberRagz
+
 - [MagicMirror²](https://github.com/MichMich/MagicMirror) — the open-source smart mirror platform this module is built on
 
 ---

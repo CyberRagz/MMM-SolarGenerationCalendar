@@ -177,11 +177,11 @@ module.exports = NodeHelper.create({
 
   async fetchTodayCurve() {
 
-    const now         = new Date();
-    // Midnight IST = midnight local − but toLocaleDateString gives the correct local date.
-    // Build start-of-day in UTC by subtracting the UTC offset for IST (330 min).
-    const todayLocal  = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
-    const startISO    = new Date(todayLocal.getTime() - 5.5 * 60 * 60 * 1000).toISOString();
+    const now        = new Date();
+    // Build midnight of today in local time, then convert to ISO for the HA API call.
+    // new Date(y, m, d, 0,0,0) gives midnight in the Pi's local timezone automatically.
+    const todayLocal = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
+    const startISO   = todayLocal.toISOString();
 
     try {
 
@@ -198,10 +198,9 @@ module.exports = NodeHelper.create({
       return records
         .filter(r => r.state !== "unavailable" && r.state !== "unknown")
         .map(r => {
-          const d   = new Date(r.last_changed);
-          const ist = new Date(d.getTime() + 5.5 * 60 * 60 * 1000);
+          const d = new Date(r.last_changed);
           return {
-            time:  ist.toTimeString().slice(0, 5),
+            time:  d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false }),
             power: parseFloat(r.state) || 0
           };
         });
@@ -311,9 +310,8 @@ module.exports = NodeHelper.create({
 
             if (!entry.start || entry.change == null) return;
 
-            // entry.start is epoch ms — shift to IST (+5:30) for correct date
-            const ist     = new Date(Number(entry.start) + 5.5 * 60 * 60 * 1000);
-            const dateKey = ist.toISOString().slice(0, 10);
+            // entry.start is epoch ms — use local timezone for correct date key
+            const dateKey = new Date(Number(entry.start)).toLocaleDateString("en-CA");
             const energy  = parseFloat(entry.change.toFixed(2));
 
             // Keep live eToday for today; use statistics for all past days

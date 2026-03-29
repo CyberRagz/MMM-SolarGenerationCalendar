@@ -285,12 +285,11 @@ Module.register("MMM-SolarGenerationCalendar", {
     const box = document.createElement("div")
     box.className = "solar-status"
 
-    // Last updated — convert unix epoch float → IST HH:MM
+    // Last updated — format epoch float as local time HH:MM
     let updatedStr = ""
     if (this.lastTs) {
-      const d   = new Date(parseFloat(this.lastTs) * 1000)
-      const ist = new Date(d.getTime() + 5.5 * 60 * 60 * 1000)
-      updatedStr = ist.toTimeString().slice(0, 5)
+      const d = new Date(parseFloat(this.lastTs) * 1000)
+      updatedStr = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })
     }
 
     const col             = this.statusColor()

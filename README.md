@@ -398,9 +398,6 @@ To verify or set your Pi's timezone:
 ```bash
 timedatectl                              # check current timezone
 sudo timedatectl set-timezone Asia/Kolkata   # example — replace with your zone
-
-
-
 ---
 
 ## 🎨 Customisation Tips

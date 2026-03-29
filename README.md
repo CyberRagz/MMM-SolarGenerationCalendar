@@ -208,7 +208,6 @@ MMM-SolarGenerationCalendar/
 ## 🤝 Related Projects
 
 - [solis-sensor](https://github.com/hultenvp/solis-sensor) — the HA integration that provides all inverter entities
-- [MMM-TideTimes](https://github.com/CyberRagz/MMM-TideTimes) — another MagicMirror² module by CyberRagz
 
 ---
 

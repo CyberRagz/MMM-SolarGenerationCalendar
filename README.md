@@ -399,7 +399,7 @@ All time and date handling uses the **Pi's system timezone automatically** — t
 To verify or set your Pi's timezone:
 ```bash
 timedatectl                              # check current timezone
-sudo timedatectl set-timezone Asia/Kolkata   # example — replace with your zone
+sudo timedatectl set-timezone Europe/London   # example — replace with your zone
 ```
 
 ## 🎨 Customisation Tips

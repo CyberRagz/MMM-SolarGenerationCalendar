@@ -386,16 +386,20 @@ Typical clear-sky irradiance peaks around 800–1000 W/m² at the panel surface,
 
 ---
 
-## 🕐 Timezone Handling
+All time and date handling uses the **Pi's system timezone automatically** — there are no hardcoded UTC offsets anywhere in the code. As long as your Pi's timezone is configured correctly, all displays will show the right local time regardless of where in the world you are.
 
-The module is written with India Standard Time (IST, UTC+5:30) in mind but the approach adapts to any timezone if the Pi's system timezone is set correctly:
+- **Power curve start time:** Midnight of the current local date is computed with `new Date(year, month, day, 0, 0, 0)`, which produces local midnight in the Pi's system timezone. This is passed directly to the HA history API as the start time — no manual offset arithmetic needed.
+- **Power curve labels:** HA timestamps are converted to display labels using `toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })`, which formats in the Pi's local timezone automatically.
+- **Last-updated display:** The epoch timestamp from `sensor.solis_timestamp_measurements_received` is formatted the same way — `toLocaleTimeString()` with 24-hour format — so the "Updated: HH:MM" in the status bar always reflects local time.
+- **History date keys:** `toLocaleDateString("en-CA")` produces `YYYY-MM-DD` in the Pi's local timezone — critical for ensuring each day's bar is attributed to the correct local calendar date and not the UTC date.
+- **WS history date attribution:** Statistics `start` times (epoch ms from HA) are passed directly to `new Date(...).toLocaleDateString("en-CA")`, so overnight statistics land on the correct local date without any manual offset.
 
-- **Power curve start time:** Midnight of the current local date is computed using JavaScript's `new Date(year, month, day, 0, 0, 0)` constructor which uses the Pi's local timezone. The resulting time is then adjusted when converting HA timestamps to display labels.
-- **History date keys:** `toLocaleDateString("en-CA")` produces `YYYY-MM-DD` in the Pi's local timezone — critical for ensuring today's bar is attributed to the correct calendar date and not the UTC date (which may differ by several hours).
-- **Last-updated display:** The epoch timestamp from `sensor.solis_timestamp_measurements_received` is converted to IST by adding `5.5 × 60 × 60 × 1000` ms before formatting as HH:MM.
-- **WS history date attribution:** Statistics `start` times (epoch ms from HA) are shifted by +5:30 before extracting the date string, ensuring overnight HA statistics land on the correct local date rather than the previous UTC date.
+To verify or set your Pi's timezone:
+```bash
+timedatectl                              # check current timezone
+sudo timedatectl set-timezone Asia/Kolkata   # example — replace with your zone
 
-If your installation is in a different timezone, ensure the Pi's system timezone is set correctly with `sudo timedatectl set-timezone Your/Timezone`. The `5.5` hour offset in the display label code (`node_helper.js` lines ~202 and ~315) can be adjusted to match your UTC offset if needed.
+
 
 ---
 
